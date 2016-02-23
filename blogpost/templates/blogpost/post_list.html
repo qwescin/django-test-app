@@ -5,23 +5,20 @@
     <title>О гусях!</title>
 </head>
 <body>
-    <p>TEST</p>
-    <p>ТЕСТ_РУСКИЙ</p>
+
     <div>
         <h1><a href="">Жизнь гусей</a> </h1>
     </div>
+    
+    {% for post in posts %}
 
-    <div>
-        <p>созданно 24.02.2016</p>
-        <h2><a href="">История одного гуся</a> </h2>
-        <p>Жил был гусь, и хотел он быть поросёнком Петром.</p>
-    </div>
+        <div>
+            <p>созданно: {{ post.published_date }} </p>
+            <h2><a href="">{{ post.title }}</a> </h2>
+            <p>{{ post.text|linebreaks }}</p>
+        </div>
 
-    <div>
-        <p>созданно 24.02.2016</p>
-        <h2><a href="">История одного гуся</a> </h2>
-        <p>Жил был гусь, и хотел он быть поросёнком Петром.</p>
-    </div>
+    {% endfor %}
 
 </body>
 </html>
