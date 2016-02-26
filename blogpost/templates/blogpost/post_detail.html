@@ -1,9 +1,9 @@
-{% extends 'blogpost/base.html' %}
+{% extends 'blogpost/template_blog.html' %}
 
 {% block content %}
     <div class="post">
         {% if post.published_date %}
-            {{ post.published_date }}
+            <p class="blog-post-meta">{{ post.published_date|date:"d/M/Y H:m" }} by <a href="#">{{ post.author }}</a></p>
         {% else %}
             <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
         {% endif %}
