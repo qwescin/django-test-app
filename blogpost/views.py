@@ -4,14 +4,32 @@ from .models import Post
 from .forms import PostForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.views.generic.dates import YearArchiveView
+
+months = ('January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December')
 
 
+
+months_revert = {'1': 'January', '2': 'February', '3': 'March', '4': 'April', '5': 'May', '6': 'June',
+          '7': 'July', '8': 'August', '9': 'September', '10': 'October', '11': 'November', '12': 'December'}
 # Create your views here.
 
 
+
 def post_list(request):
+    conv_date = []
+    conv_year_month = []
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-    return render(request, 'blogpost/post_list.html', {'posts': posts})
+
+    for post in posts:
+        month, year = str(post.published_date.month), str(post.published_date.year)
+        if month+year in conv_date: continue
+        conv_date.append(month+year)
+        conv_year_month.append((month, year))
+
+    return render(request, 'blogpost/post_list.html', {'posts': posts, 'conv_date': conv_date,
+                                                       'months_revert':months_revert, 'conv_year_month': conv_year_month})
 
 
 def post_detail(request, pk):
