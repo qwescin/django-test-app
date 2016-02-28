@@ -15,11 +15,11 @@ months_revert = {'1': 'January', '2': 'February', '3': 'March', '4': 'April', '5
           '7': 'July', '8': 'August', '9': 'September', '10': 'October', '11': 'November', '12': 'December'}
 # Create your views here.
 
-
+conv_date = []
+conv_year_month = []
 
 def post_list(request):
-    conv_date = []
-    conv_year_month = []
+
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
     for post in posts:
@@ -35,6 +35,21 @@ def post_list(request):
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blogpost/post_detail.html', {'post': post})
+
+def months_archive(request, year, month):
+
+    posts_all = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    posts = Post.objects.filter(published_date__year=year, published_date__month=month).order_by('-published_date')
+
+    for post in posts_all:
+        months, year = str(post.published_date.month), str(post.published_date.year)
+        if months+year in conv_date: continue
+        conv_date.append(months+year)
+        conv_year_month.append((months, year))
+
+    return render(request, 'blogpost/post_list.html', {'posts': posts, 'conv_date': conv_date,
+                                                       'months_revert':months_revert, 'conv_year_month': conv_year_month})
+
 
 @login_required
 def post_new(request):

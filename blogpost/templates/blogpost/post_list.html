@@ -15,7 +15,8 @@
 {% block archive %}
 
     {% for month,year in conv_year_month %}
-        <li><a href="{{ year}}/{{ month }}">{% for key, value in months_revert.items %}{% if key == month %}{{ value }}{% endif %}{% endfor %} {{ year }}</a></li>
+        <!--<li><a href="archive/{{ year}}/{{ month }}">{% for key, value in months_revert.items %}{% if key == month %}{{ value }}{% endif %}{% endfor %} {{ year }}</a></li>-->
+        <li><a href="{% url 'post_archive' year month %}">{% for key, value in months_revert.items %}{% if key == month %}{{ value }}{% endif %}{% endfor %} {{ year }}</a></li>
     {% endfor %}
 
 
