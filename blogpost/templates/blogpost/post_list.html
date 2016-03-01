@@ -4,7 +4,7 @@
     {% for post in posts %}
         <div>
             <h2 class="blog-post-title"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
-            <p>{{ post.text|linebreaks }}</p>
+            <p>{{ post.text|safe }}</p>
             <div>
                 <p class="blog-post-meta">{{ post.published_date|date:"d-m-Y H:i" }} by <a href="#">{{ post.author }}</a></p>
             </div>
