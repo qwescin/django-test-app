@@ -4,7 +4,7 @@ from .models import Post
 from .forms import PostForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic.dates import YearArchiveView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 months = ('January', 'February', 'March', 'April', 'May', 'June',
           'July', 'August', 'September', 'October', 'November', 'December')
@@ -21,6 +21,15 @@ conv_year_month = []
 def post_list(request):
 
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    paginator = Paginator(posts, 5)
+
+    page = request.GET.get('page')
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
 
     for post in posts:
         month, year = str(post.published_date.month), str(post.published_date.year)
@@ -28,7 +37,7 @@ def post_list(request):
         conv_date.append(month+year)
         conv_year_month.append((month, year))
 
-    return render(request, 'blogpost/post_list.html', {'posts': posts, 'conv_date': conv_date,
+    return render(request, 'blogpost/post_list.html', {'posts_list': posts_list, 'conv_date': conv_date,
                                                        'months_revert':months_revert, 'conv_year_month': conv_year_month})
 
 
@@ -41,13 +50,23 @@ def months_archive(request, year, month):
     posts_all = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     posts = Post.objects.filter(published_date__year=year, published_date__month=month).order_by('-published_date')
 
+    paginator = Paginator(posts, 5)
+
+    page = request.GET.get('page')
+    try:
+        posts_list = paginator.page(page)
+    except PageNotAnInteger:
+        posts_list = paginator.page(1)
+    except EmptyPage:
+        posts_list = paginator.page(paginator.num_pages)
+
     for post in posts_all:
         months, year = str(post.published_date.month), str(post.published_date.year)
         if months+year in conv_date: continue
         conv_date.append(months+year)
         conv_year_month.append((months, year))
 
-    return render(request, 'blogpost/post_list.html', {'posts': posts, 'conv_date': conv_date,
+    return render(request, 'blogpost/post_list.html', {'posts_list': posts_list, 'conv_date': conv_date,
                                                        'months_revert':months_revert, 'conv_year_month': conv_year_month})
 
 

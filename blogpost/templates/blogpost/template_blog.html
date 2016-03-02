@@ -70,10 +70,25 @@
             {% endblock content%}
           </div><!-- /.blog-post -->
 
-          <nav>
+          <!--<nav>
             <ul class="pager">
               <li><a href="#">Previous</a></li>
               <li><a href="#">Next</a></li>
+            </ul>
+          </nav>--original-->
+
+          <nav>
+            <ul class="pager">
+                {% if posts_list.has_previous %}
+                    <li><a href="?page={{ posts_list.previous_page_number }}">previous</a></li>
+                {% endif %}
+
+                <li><a href="">Page {{ posts_list.number }} of {{ posts_list.paginator.num_pages }}</a></li>
+
+
+                {% if posts_list.has_next %}
+                    <li><a href="?page={{ posts_list.next_page_number }}">next</a></li>
+                {% endif %}
             </ul>
           </nav>
 
